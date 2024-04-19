@@ -1,9 +1,5 @@
-from redmail.email.sender import EmailSender
-import datetime
-from pathlib import Path
 from src.configs import Config
-import os
-
+from redmail.email.sender import EmailSender
 
 settings = Config()
 

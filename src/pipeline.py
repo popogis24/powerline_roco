@@ -1,7 +1,7 @@
-from src.distancia_roco import CalculoDistanciaRoco
-from src.perimetro_roco import CalculoPerimetroRoco
 import schedule
 import time
+from src.distancia_roco import CalculoDistanciaRoco
+from src.perimetro_roco import CalculoPerimetroRoco
 from src.notificator import EmailNotification
 from src.configs import Config
 settings = Config()
