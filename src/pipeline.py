@@ -3,15 +3,17 @@ from src.perimetro_roco import CalculoPerimetroRoco
 import schedule
 import time
 from src.notificator import EmailNotification
+from src.configs import Config
+settings = Config()
 
 class Pipeline:
-    def __init__(self, roco_de_vao, roco_de_linha, output_calc_distancia, output_calc_perimetro):
+    def __init__(self, vao_de_linha, roco_de_vao, output_calc_distancia, output_calc_perimetro):
+        self.vao_de_linha = vao_de_linha
         self.roco_de_vao = roco_de_vao
-        self.roco_de_linha = roco_de_linha
         self.output_calc_distancia = output_calc_distancia
         self.output_calc_perimetro = output_calc_perimetro
         self.Calc_Perimetro = CalculoPerimetroRoco(self.roco_de_vao, self.output_calc_perimetro)
-        self.Calc_Distancia = CalculoDistanciaRoco(self.roco_de_linha, self.output_calc_distancia)
+        self.Calc_Distancia = CalculoDistanciaRoco(self.vao_de_linha, self.roco_de_vao, self.output_calc_distancia)
 
     def send_mail(self, log_perimetro:dict, log_distancia:dict):
         subject = "Relatório de cálculo de perímetro e distância"
@@ -44,11 +46,11 @@ class Pipeline:
     
 
 if __name__ == "__main__":
+    vao_de_linha = settings.ARCGIS[]
     roco_de_vao = r"roco_de_vao.shp"
-    roco_de_linha = r"roco_de_linha.shp"
     output_calc_distancia = r"output_calc_distancia.shp"
     output_calc_perimetro = r"output_calc_perimetro.shp"
-    pipeline = Pipeline(roco_de_vao, roco_de_linha, output_calc_distancia, output_calc_perimetro)
+    pipeline = Pipeline(vao_de_linha, roco_de_vao, output_calc_distancia, output_calc_perimetro)
     def runs_function():
         relatorio_perimetro, relatorio_distancia = pipeline.run()
         pipeline.send_mail(relatorio_perimetro, relatorio_distancia)

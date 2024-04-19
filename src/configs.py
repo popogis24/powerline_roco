@@ -2,7 +2,7 @@ import os
 import tomllib as toml
 
 class Config:
-    def __init__(self, filepath="path_to_your_toml_file.toml"):
+    def __init__(self, filepath=r"C:\taesa\settings.toml"):
         with open(filepath, "rb") as file:  # Open the file in binary mode
             self.settings = toml.load(file)
 

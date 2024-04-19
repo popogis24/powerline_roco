@@ -1,12 +1,11 @@
 from redmail.email.sender import EmailSender
 import datetime
 from pathlib import Path
-import tomllib
-from configs import Config
+from src.configs import Config
 import os
 
 
-settings = Config(r"C:\taesa\settings.toml")
+settings = Config()
 
 
 class EmailNotification():

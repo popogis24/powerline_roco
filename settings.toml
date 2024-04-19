@@ -1,0 +1,17 @@
+title = "TOML Taesa"
+
+[owner]
+name = "TAESA"
+
+[EMAIL]
+host = "smtp-mail.outlook.com"
+port = 587
+username = "correio@carusojrea.com.br"
+password = "Lof13882"
+email_receiver = "anderson@giscaruso.com.br"
+
+[ARCGIS]
+vao_de_linha = "vao_de_linha.shp"
+roco_de_vao = "roco_de_vao.shp"
+output_calc_distancia = "output_calc_distancia.shp"
+output_calc_perimetro = "output_calc_perimetro.shp"

@@ -1,0 +1,24 @@
+[project]
+name = "powerline_roco"
+version = "0.1.0"
+description = "."
+authors = [
+    {name = "anderson", email = "anderson@giscaruso.com.br"},
+]
+dependencies = [
+    "tomli>=2.0.1",
+    "schedule>=1.2.1",
+    "datetime>=5.5",
+    "redmail>=0.6.0",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = ","}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
