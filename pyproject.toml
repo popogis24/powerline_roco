@@ -11,6 +11,8 @@ dependencies = [
     "datetime>=5.5",
     "redmail>=0.6.0",
     "ipykernel>=6.29.4",
+    "pytest>=8.1.1",
+    "src>=0.0.7",
 ]
 requires-python = ">=3.8"
 readme = "README.md"

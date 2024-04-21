@@ -1,8 +1,7 @@
-from src.configs import Config
+from configs import Config
 from redmail.email.sender import EmailSender
 
 settings = Config()
-
 
 class EmailNotification():
     def __init__(self, email:dict):
