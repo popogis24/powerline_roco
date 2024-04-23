@@ -4,6 +4,7 @@ import arcpy.management as mn
 import arcpy.analysis as an
 import arcpy.conversion as cs
 import datetime
+from proc_abs import Processor
 
 arcpy.env.overwriteOutput = True
 '''
@@ -35,7 +36,7 @@ Utiliza a ferramenta "Calculate Geometry Attributes" para calcular o comprimento
 Utiliza a ferramenta "Delete Field" para excluir campos desnecessários das feições resultantes.
 '''
 
-class CalculoDistanciaRoco:
+class CalculoDistanciaRoco(Processor):
     def __init__(self, vaos_de_linha, roco_de_vao, output):
         self.vaos_de_linha = vaos_de_linha
         self.roco_de_vao = roco_de_vao

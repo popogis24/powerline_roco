@@ -4,6 +4,8 @@ import arcpy.management as mn
 import arcpy.analysis as an
 import arcpy.conversion as cs
 import datetime
+from proc_abs import Processor
+
 arcpy.env.overwriteOutput = True
 '''
 ████████╗ █████╗ ███████╗███████╗ █████╗ 
@@ -30,7 +32,7 @@ Calcula as propriedades geométricas das linhas resultantes, neste caso, o compr
 Remove campos específicos do conjunto de dados resultante. Esses campos são listados explicitamente na função DeleteField.
 '''
 
-class CalculoPerimetroRoco:
+class CalculoPerimetroRoco(Processor):
     def __init__(self, roco_de_vao, output):
         self.roco_de_vao = roco_de_vao
         self.output = output
