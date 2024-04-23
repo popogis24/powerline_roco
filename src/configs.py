@@ -1,8 +1,7 @@
-import os
-import tomllib as toml
+import tomli as toml
 
 class Config:
-    def __init__(self, filepath=r"C:\taesa\settings.toml"):
+    def __init__(self, filepath=r"C:\taesa\powerline_roco\settings.toml"):
         with open(filepath, "rb") as file:  # Open the file in binary mode
             self.settings = toml.load(file)
 

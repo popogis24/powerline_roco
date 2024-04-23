@@ -4,7 +4,7 @@ import arcpy.management as mn
 import arcpy.analysis as an
 import arcpy.conversion as cs
 import datetime
-from proc_abs import Processor
+from processors.proc_abs import Processor
 
 arcpy.env.overwriteOutput = True
 '''
@@ -41,10 +41,9 @@ class CalculoPerimetroRoco(Processor):
         layer = mn.MakeFeatureLayer(in_features=self.roco_de_vao,
                                     out_layer="lyr",
                                     )
-        vao_de_linha = mn.SelectLayerByAttribute(in_layer=layer,
+        vao_de_linha = mn.SelectLayerByAttribute(in_layer_or_view=layer,
                                                  where_clause="check_levantamento = '1'",
-                                                 selection_type="NEW_SELECTION"
-                                                 )
+                                                 selection_type="NEW_SELECTION")
         return vao_de_linha
 
     def feature_to_line(self, selected_layer):
@@ -67,7 +66,7 @@ class CalculoPerimetroRoco(Processor):
         return calculate_geometry
 
     def delete_field(self, calculate_geometry):
-        fields_to_keep = []
+        fields_to_keep = ['ds_linha_transmissao','est_extrem','comp_metros','created_user','created_date','last_edited_user','last_edited_date']
         delete_field = mn.DeleteField(in_table=calculate_geometry,
                                       drop_field=fields_to_keep,
                                       method="KEEP_FIELDS"
@@ -86,22 +85,30 @@ class CalculoPerimetroRoco(Processor):
         return count
 
     def run(self):
-        previous_row_count = self.row_count(self.output)
-
-        selected_layer = self.select_layer_by_attribute()
-        feature_to_line = self.feature_to_line(selected_layer)
-        split_line = self.split_line_at_vertices(feature_to_line)
-        calculate_geometry = self.calculate_geometry_attributes(split_line)
-        clear_layer = self.delete_field(calculate_geometry)
-        self.copy_features(clear_layer)
-        status = 'A execução ocorreu normalmente' if self.copy_features(clear_layer) else 'Houve erro na execução'
-        current_row_count = self.row_count(self.output)
-        current_time = datetime.datetime.now()
-        return {
-            'title':'Calculo de Perimetro da Área do Roço',
-            'text': 'Processo finalizado!',
-            'status': status,
-            'time': current_time,
-            'previous_row_count': previous_row_count,
-            'current_row_count': current_row_count,
-        }
+        try:
+            previous_row_count = self.row_count(self.output)
+            selected_layer = self.select_layer_by_attribute()
+            feature_to_line = self.feature_to_line(selected_layer)
+            split_line = self.split_line_at_vertices(feature_to_line)
+            calculate_geometry = self.calculate_geometry_attributes(split_line)
+            self.delete_field(calculate_geometry)
+            status = 'A execução ocorreu normalmente' if self.copy_features(split_line) else 'Houve erro na execução'
+            current_row_count = self.row_count(self.output)
+            current_time = datetime.datetime.now()
+            return {
+                'title':'Calculo de Perimetro da Área do Roço',
+                'text': 'Processo finalizado!',
+                'status': status,
+                'time': current_time,
+                'previous_row_count': previous_row_count,
+                'current_row_count': current_row_count,
+            }
+        except:
+            return {
+                'title':'Calculo de Perimetro da Área do Roço',
+                'text': 'Houve erro na execução',
+                'status': 'Houve erro na execução',
+                'time': datetime.datetime.now(),
+                'previous_row_count': 0,
+                'current_row_count': 0,
+            }

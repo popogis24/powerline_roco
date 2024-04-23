@@ -1,7 +1,7 @@
 import schedule
 import time
-from distancia_roco import CalculoDistanciaRoco
-from perimetro_roco import CalculoPerimetroRoco
+from processors.proc_distance import CalculoDistanciaRoco
+from processors.proc_perimeter import CalculoPerimetroRoco
 from notificator import EmailNotification
 from configs import Config
 from database import Database
@@ -30,7 +30,7 @@ class Pipeline:
         {log_distancia['title']}\n
         {log_distancia['text']}\n
         {log_distancia['status']}\n
-        {log_distancia['horario']}\n
+        {log_distancia['time']}\n
         Contagem de linhas anterior: {log_distancia['previous_row_count']}\n
         Contagem de linhas atual: {log_distancia['current_row_count']}\n
         '''
@@ -54,15 +54,17 @@ if __name__ == "__main__":
     output_calc_perimetro = settings.ARCGIS["output_calc_perimetro"]
     db_manager = Database('log.db')
     pipeline = Pipeline(vao_de_linha, roco_de_vao, output_calc_distancia, output_calc_perimetro)
+    
     def run_function():
         relatorio_perimetro, relatorio_distancia = pipeline.run()
         pipeline.send_mail(relatorio_perimetro, relatorio_distancia)
-        db_manager.insert_data(relatorio_perimetro)
-        db_manager.insert_data(relatorio_distancia)
-        
-    schedule.every().day.at("00:00").do(run_function)
-    while True:
-        schedule.run_pending()
-        print("Waiting...")
-        time.sleep(3600)
+        db_manager.insert_data(relatorio_perimetro, 'perimetro')
+        db_manager.insert_data(relatorio_distancia, 'distancia')
+    
+    run_function()
+    # schedule.every().day.at("00:00").do(run_function)
+    # while True:
+    #     schedule.run_pending()
+    #     print("Waiting...")
+    #     time.sleep(3600)
     

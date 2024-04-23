@@ -4,7 +4,7 @@ import arcpy.management as mn
 import arcpy.analysis as an
 import arcpy.conversion as cs
 import datetime
-from proc_abs import Processor
+from processors.proc_abs import Processor
 
 arcpy.env.overwriteOutput = True
 '''
@@ -61,20 +61,20 @@ class CalculoDistanciaRoco(Processor):
         return erased_layer
 
     def explode(self, erased_layer):
-        exploded_layer = cs.MultipartToSinglepart(in_features=erased_layer,
+        exploded_layer = mn.MultipartToSinglepart(in_features=erased_layer,
                                                    out_feature_class="in_memory//exploded_layer"
                                                    )
         return exploded_layer
 
     def calculate_geometry_attributes(self, exploded_layer):
         calculated_layer = mn.CalculateGeometryAttributes(in_features=exploded_layer,
-                                                          geometry_property=[["LENGTH_GEODESIC", "comp_metros"]],
+                                                          geometry_property=[["comp_metros", "LENGTH_GEODESIC"]],
                                                           length_unit="METERS"
                                                           )
         return calculated_layer
 
     def delete_field(self, calculated_layer):
-        fields_to_keep = []
+        fields_to_keep = ['ds_linha_transmissao','nu_vao','est_extrem','comp_metros','created_user','created_date','last_edited_user','last_edited_date']
         clear_layer = mn.DeleteField(in_table=calculated_layer,
                                      drop_field=fields_to_keep,
                                      method="KEEP_FIELDS")
@@ -87,27 +87,35 @@ class CalculoDistanciaRoco(Processor):
         return copy_features
 
     def row_count(self, fc):
-        result = mn.GetCount(fc)
-        count = int(result)
+        result = arcpy.GetCount_management(fc)
+        count = int(result.getOutput(0))
         return count
 
     def run(self):
-        previous_row_count = self.row_count(self.output)
-
-        selected_layer = self.select_layer_by_location()
-        erased_layer = self.erase(selected_layer)
-        exploded_layer = self.explode(erased_layer)
-        calculated_layer = self.calculate_geometry_attributes(exploded_layer)
-        clear_layer = self.delete_field(calculated_layer)
-        self.copy_features(clear_layer)
-        status = 'A execução ocorreu normalmente' if self.copy_features(clear_layer) else 'Houve erro na execução'
-        current_row_count = self.row_count(self.output)
-        current_time = datetime.datetime.now()
-        return {
-            'title':'Calculo de Distância entre Roço e Torre',
-            'text': 'Processo finalizado!',
-            'status': status,
-            'horario': current_time,
-            'previous_row_count': previous_row_count,
-            'current_row_count': current_row_count,
-        }
+        try:
+            previous_row_count = self.row_count(self.output)
+            selected_layer = self.select_layer_by_location()
+            erased_layer = self.erase(selected_layer)
+            exploded_layer = self.explode(erased_layer)
+            calculated_layer = self.calculate_geometry_attributes(exploded_layer)
+            self.delete_field(calculated_layer)
+            status = 'A execução ocorreu normalmente' if self.copy_features(exploded_layer) else 'Houve erro na execução'
+            current_row_count = self.row_count(self.output)
+            current_time = datetime.datetime.now()
+            return {
+                'title':'Calculo de Distância entre Roço e Torre',
+                'text': 'Processo finalizado!',
+                'status': status,
+                'time': current_time,
+                'previous_row_count': previous_row_count,
+                'current_row_count': current_row_count,
+            }
+        except:
+            return {
+                'title':'Calculo de Distância entre Roço e Torre',
+                'text': 'Houve erro na execução',
+                'status': 'Houve erro na execução',
+                'time': datetime.datetime.now(),
+                'previous_row_count': 0,
+                'current_row_count': 0,
+            }

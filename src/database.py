@@ -1,4 +1,5 @@
 import sqlite3
+
 class Database:
     def __init__(self, db_name):
         self.db_name = db_name
@@ -10,22 +11,32 @@ class Database:
 
     def create_table(self):
         query= ("""
-        CREATE TABLE IF NOT EXISTS log (
+        CREATE TABLE IF NOT EXISTS log_perimetro (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            msg TEXT,
             status TEXT,
-            horario TEXT,
+            time TEXT,
+            previous_row_count INTEGER,
+            current_row_count INTEGER
+        );
+        """)
+        query2 = ("""
+        CREATE TABLE IF NOT EXISTS log_distancia (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            status TEXT,
+            time TEXT,
             previous_row_count INTEGER,
             current_row_count INTEGER
         );
         """)
         self.session.execute(query)
+        self.session.execute(query2)
         self.conn.commit()
     
-    def insert_data(self, data):
-        query = ("""
-        INSERT INTO log (msg, status, horario, previous_row_count, current_row_count)
-        VALUES (:msg, :status, :horario, :previous_row_count, :current_row_count);
+    def insert_data(self, data, type):
+        self.create_table()
+        query = (f"""
+        INSERT INTO log_{type} (status, time, previous_row_count, current_row_count)
+        VALUES (:status, :time, :previous_row_count, :current_row_count);
         """)
         self.session.execute(query, data)
         self.conn.commit()

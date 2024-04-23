@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:46d933cbe6113e6127fe5adec9d93e667516ac9c1033d32fd2223620c03aa989"
+content_hash = "sha256:0506afb0f0f26b005b7e4a6c726740417952b01a168d78cbeedf02c4685ab3e1"
 
 [[package]]
 name = "appnope"
@@ -781,15 +781,6 @@ groups = ["default"]
 files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
-]
-
-[[package]]
-name = "src"
-version = "0.0.7"
-summary = ""
-groups = ["default"]
-files = [
-    {file = "src-0.0.7.zip", hash = "sha256:2a33bd2995800b2d3fc80efb94a300951413e02ede94691aef58bffbd69e5b0e"},
 ]
 
 [[package]]
