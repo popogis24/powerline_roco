@@ -15,3 +15,4 @@ vao_de_linha = "C:\\taesa\\teste.gdb\\Base_Limpeza_de_Faixa_2024\\vao_de_linha"
 roco_de_vao = "C:\\taesa\\teste.gdb\\Base_Limpeza_de_Faixa_2024\\roco_de_vao_2024"
 output_calc_distancia = "C:\\taesa\\teste.gdb\\Base_Limpeza_de_Faixa_2024\\medidas_entre_torres_e_roco_vao_2024"
 output_calc_perimetro = "C:\\taesa\\teste.gdb\\Base_Limpeza_de_Faixa_2024\\laterais_poligonos_roco_vao_2024"
+workspace = 'C:\\taesa\\workspace.gdb'

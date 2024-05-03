@@ -1,4 +1,4 @@
 @echo off
 cd C:\taesa\powerline_roco\src
-C:\caminho\para\seu\interpretador\python.exe pipeline.py
+C:\Users\anderson.souza\AppData\Local\ESRI\conda\envs\gado_arcpy32\python.exe pipeline.py
 pause
