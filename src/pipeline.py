@@ -10,22 +10,23 @@ import os
 import arcpy
 
 settings = Config()
-
+print('Iniciando o programa...')
+print('Aguarde...')
 class Pipeline:
     def __init__(self, vao_de_linha, roco_de_vao, output_calc_distancia, output_calc_perimetro):
         self.vao_de_linha = vao_de_linha
         self.roco_de_vao = roco_de_vao
         self.output_calc_distancia = output_calc_distancia
         self.output_calc_perimetro = output_calc_perimetro
-        self.exported_vao_de_linha = self.export_without_attach(self.vao_de_linha)
-        self.exported_roco_de_vao = self.export_without_attach(self.roco_de_vao)
+        self.exported_vao_de_linha = self.export_without_attach(self.vao_de_linha, 'vao_de_linha')
+        self.exported_roco_de_vao = self.export_without_attach(self.roco_de_vao, 'roco_de_vao')
         self.Calc_Perimetro = CalculoPerimetroRoco(self.exported_roco_de_vao, self.output_calc_perimetro)
         self.Calc_Distancia = CalculoDistanciaRoco(self.exported_vao_de_linha, self.exported_roco_de_vao, self.output_calc_distancia)
 
-    def export_without_attach(self, feature_class):
+    def export_without_attach(self, feature_class, name):
         arcpy.env.overwriteOutput = True
         diretorio = settings.ARCGIS["workspace"]
-        filename = os.path.join(diretorio, os.path.basename(feature_class+"_noATTACH"))
+        filename = os.path.join(diretorio, name+"_noATTACH")
         with arcpy.EnvManager(maintainAttachments="NOT_MAINTAIN_ATTACHEMENTS"):
             exported_feature = cs.ExportFeatures(in_features=feature_class,
                                                 out_features=filename,
