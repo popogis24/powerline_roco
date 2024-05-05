@@ -46,9 +46,14 @@ class CalculoDistanciaRoco(Processor):
         layer = mn.MakeFeatureLayer(in_features=self.vaos_de_linha,
                                     out_layer="lyr",
                                     )
+        ## o bug tá aqui, eu tenho que selecionar só so roços que estao com "1"
+        roco_de_vao = mn.SelectLayerByAttribute(in_layer_or_view=layer,
+                                            where_clause="check_levantamento = '1'",
+                                            selection_type="NEW_SELECTION")
+        
         vao_de_linha = mn.SelectLayerByLocation(in_layer=layer,
                                                  overlap_type="INTERSECT",
-                                                 select_features=self.roco_de_vao,
+                                                 select_features=roco_de_vao,
                                                  selection_type="NEW_SELECTION"
                                                  )
         return vao_de_linha

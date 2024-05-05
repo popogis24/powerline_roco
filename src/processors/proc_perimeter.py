@@ -41,10 +41,10 @@ class CalculoPerimetroRoco(Processor):
         layer = mn.MakeFeatureLayer(in_features=self.roco_de_vao,
                                     out_layer="lyr",
                                     )
-        vao_de_linha = mn.SelectLayerByAttribute(in_layer_or_view=layer,
+        roco_de_vao = mn.SelectLayerByAttribute(in_layer_or_view=layer,
                                                  where_clause="check_levantamento = '1'",
                                                  selection_type="NEW_SELECTION")
-        return vao_de_linha
+        return roco_de_vao
 
     def feature_to_line(self, selected_layer):
         feature_to_line = mn.FeatureToLine(in_features=selected_layer,
