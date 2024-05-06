@@ -59,6 +59,11 @@ class CalculoPerimetroRoco(Processor):
         return split_line
 
     def calculate_geometry_attributes(self, split_line):
+        mn.AddField(in_table=split_line,
+            field_name="comp_metros",
+            field_type="DOUBLE",
+            field_alias="Comprimento (m)"
+            )
         calculate_geometry = mn.CalculateGeometryAttributes(in_features=split_line,
                                                             geometry_property=[["comp_metros", "LENGTH_GEODESIC"]],
                                                             length_unit="METERS"

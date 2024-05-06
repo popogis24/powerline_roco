@@ -47,20 +47,25 @@ class CalculoDistanciaRoco(Processor):
                                     out_layer="lyr",
                                     )
         ## o bug tá aqui, eu tenho que selecionar só so roços que estao com "1"
-        roco_de_vao = mn.SelectLayerByAttribute(in_layer_or_view=layer,
+        roco_de_vao = mn.SelectLayerByAttribute(in_layer_or_view=self.roco_de_vao,
                                             where_clause="check_levantamento = '1'",
                                             selection_type="NEW_SELECTION")
         
         vao_de_linha = mn.SelectLayerByLocation(in_layer=layer,
                                                  overlap_type="INTERSECT",
                                                  select_features=roco_de_vao,
-                                                 selection_type="NEW_SELECTION"
+                                                 selection_type="NEW_SELECTION",
+                                                 search_distance="10 Meters"
                                                  )
         return vao_de_linha
 
     def erase(self, selected_layer):
+        roco_de_vao = mn.SelectLayerByAttribute(in_layer_or_view=self.roco_de_vao,
+                                    where_clause="check_levantamento = '1'",
+                                    selection_type="NEW_SELECTION")
+                
         erased_layer = an.Erase(in_features=selected_layer,
-                                erase_features=self.roco_de_vao,
+                                erase_features=roco_de_vao,
                                 out_feature_class="in_memory//erased_layer"
                                 )
         return erased_layer
@@ -72,6 +77,11 @@ class CalculoDistanciaRoco(Processor):
         return exploded_layer
 
     def calculate_geometry_attributes(self, exploded_layer):
+        mn.AddField(in_table=exploded_layer,
+                    field_name="comp_metros",
+                    field_type="DOUBLE",
+                    field_alias="Comprimento (m)"
+                    )
         calculated_layer = mn.CalculateGeometryAttributes(in_features=exploded_layer,
                                                           geometry_property=[["comp_metros", "LENGTH_GEODESIC"]],
                                                           length_unit="METERS"
@@ -95,6 +105,7 @@ class CalculoDistanciaRoco(Processor):
         result = arcpy.GetCount_management(fc)
         count = int(result.getOutput(0))
         return count
+
 
     def run(self):
         try:

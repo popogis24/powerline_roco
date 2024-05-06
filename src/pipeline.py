@@ -8,6 +8,7 @@ from database import Database
 import arcpy.conversion as cs
 import os
 import arcpy
+import arcpy.management as mn
 
 settings = Config()
 print('Iniciando o programa...')
@@ -27,6 +28,8 @@ class Pipeline:
         arcpy.env.overwriteOutput = True
         diretorio = settings.ARCGIS["workspace"]
         filename = os.path.join(diretorio, name+"_noATTACH")
+        if arcpy.Exists(filename):
+            mn.Delete(filename)
         with arcpy.EnvManager(maintainAttachments="NOT_MAINTAIN_ATTACHEMENTS"):
             exported_feature = cs.ExportFeatures(in_features=feature_class,
                                                 out_features=filename,
