@@ -106,7 +106,24 @@ class CalculoDistanciaRoco(Processor):
         count = int(result.getOutput(0))
         return count
 
-
+    def run_test(self):
+        previous_row_count = 3
+        selected_layer = self.select_layer_by_location()
+        erased_layer = self.erase(selected_layer)
+        exploded_layer = self.explode(erased_layer)
+        calculated_layer = self.calculate_geometry_attributes(exploded_layer)
+        self.delete_field(calculated_layer)
+        status = 'A execução ocorreu normalmente' if self.copy_features(exploded_layer) else 'Houve erro na execução'
+        current_row_count = self.row_count(self.output)
+        current_time = datetime.datetime.now()
+        return {
+            'title':'Calculo de Distância entre Roço e Torre',
+            'text': 'Processo finalizado!',
+            'status': status,
+            'time': current_time,
+            'previous_row_count': previous_row_count,
+            'current_row_count': current_row_count,
+        }
     def run(self):
         try:
             previous_row_count = self.row_count(self.output)

@@ -89,6 +89,25 @@ class CalculoPerimetroRoco(Processor):
         count = int(result.getOutput(0))
         return count
 
+    def run_test(self):
+        previous_row_count = 3
+        selected_layer = self.select_layer_by_attribute()
+        feature_to_line = self.feature_to_line(selected_layer)
+        split_line = self.split_line_at_vertices(feature_to_line)
+        calculate_geometry = self.calculate_geometry_attributes(split_line)
+        self.delete_field(calculate_geometry)
+        status = 'A execução ocorreu normalmente' if self.copy_features(split_line) else 'Houve erro na execução'
+        current_row_count = self.row_count(self.output)
+        current_time = datetime.datetime.now()
+        return {
+            'title':'Calculo de Perimetro da Área do Roço',
+            'text': 'Processo finalizado!',
+            'status': status,
+            'time': current_time,
+            'previous_row_count': previous_row_count,
+            'current_row_count': current_row_count,
+        }
+
     def run(self):
         try:
             previous_row_count = self.row_count(self.output)
